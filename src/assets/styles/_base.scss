@@ -1,5 +1,6 @@
 @import url('./_normalize.scss');
 @import url('./_variables.scss');
+@import url('./_animation.scss');
 
 body {
   background-color: var(--background-color);
@@ -12,4 +13,11 @@ a {
   &:hover {
     color: var(--primary-color)
   }
+}
+
+.wrapper {
+  background-color: var(--dark-gray);
+  border: 1px solid var(--secondary-color);
+  border-radius: 12px;
+  padding: 1rem;
 }

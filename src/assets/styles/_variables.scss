@@ -1,14 +1,27 @@
 // Light Theme
 $light-primary: #007bff;
-$light-secondary: #6c757d;
-$light-background: #ffffff;
+$light-secondary: #a4a400;
+$light-dark-gray: #ffffd7;
+$light-gray: #fcfcbb;
+$light-background: #FFFFF0;
 $light-text: #213547;
 
 // Dark Theme
 $dark-primary: #1e90ff;
-$dark-secondary: #adb5bd;
-$dark-background: #242424;
+$dark-secondary: #4D4D4D;
+$dark-dark-gray: #262626;
+$dark-gray: #2f2f2f;
+$dark-background: #1d1d1d;
 $dark-text: rgba(255, 255, 255, 0.87);
+
+// Shimmer Colors
+$light-shimmer-primary: #b7b700a2;
+$light-shimmer-secondary: #d0d04f;
+$light-shimmer-dark: #b3b367;
+
+$dark-shimmer-primary: #3C3C3C;
+$dark-shimmer-secondary: #444444;
+$dark-shimmer-dark: #333333;
 
 // Define CSS variables for themes
 :root {
@@ -16,6 +29,12 @@ $dark-text: rgba(255, 255, 255, 0.87);
   --secondary-color: #{$light-secondary};
   --background-color: #{$light-background};
   --text-color: #{$light-text};
+  --dark-gray: #{$light-dark-gray};
+  --gray: #{$light-gray};
+  --red-color: #FA7272;
+  --shimmer-primary: #{$light-shimmer-primary};
+  --shimmer-secondary: #{$light-shimmer-secondary};
+  --shimmer-dark: #{$light-shimmer-dark};
 }
 
 [data-theme='dark'] {
@@ -23,6 +42,11 @@ $dark-text: rgba(255, 255, 255, 0.87);
   --secondary-color: #{$dark-secondary};
   --background-color: #{$dark-background};
   --text-color: #{$dark-text};
+  --dark-gray: #{$dark-dark-gray};
+  --gray: #{$dark-gray};
+  --shimmer-primary: #{$dark-shimmer-primary};
+  --shimmer-secondary: #{$dark-shimmer-secondary};
+  --shimmer-dark: #{$dark-shimmer-dark};
 }
 
 .container {

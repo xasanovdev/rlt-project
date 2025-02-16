@@ -64,3 +64,11 @@ html {
       scroll-behavior: auto !important;
     }
   }
+
+button {
+  background-color: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  offset: inherit;
+}
