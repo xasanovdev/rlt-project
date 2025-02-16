@@ -15,3 +15,20 @@
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite linear;
 }
+
+@keyframes fromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.from-right-enter-active {
+    animation: fromRight 0.3s ease-in-out;
+}
+
+.from-right-leave-active {
+    animation: fromRight 0.3s ease-in-out reverse;
+}
