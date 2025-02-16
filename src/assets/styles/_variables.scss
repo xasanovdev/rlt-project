@@ -1,0 +1,50 @@
+// Light Theme
+$light-primary: #007bff;
+$light-secondary: #6c757d;
+$light-background: #ffffff;
+$light-text: #213547;
+
+// Dark Theme
+$dark-primary: #1e90ff;
+$dark-secondary: #adb5bd;
+$dark-background: #242424;
+$dark-text: rgba(255, 255, 255, 0.87);
+
+// Define CSS variables for themes
+:root {
+  --primary-color: #{$light-primary};
+  --secondary-color: #{$light-secondary};
+  --background-color: #{$light-background};
+  --text-color: #{$light-text};
+}
+
+[data-theme='dark'] {
+  --primary-color: #{$dark-primary};
+  --secondary-color: #{$dark-secondary};
+  --background-color: #{$dark-background};
+  --text-color: #{$dark-text};
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+
+  @media (min-width: 576px) {
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 0 2rem;
+  }
+
+  @media (min-width: 992px) {
+    padding: 0 4rem;
+  }
+
+  @media (min-width: 1200px) {
+    padding: 0 6rem;
+  }
+}
+

@@ -1,0 +1,15 @@
+@import url('./_normalize.scss');
+@import url('./_variables.scss');
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+  color: var(--primary-color);
+  &:hover {
+    color: var(--primary-color)
+  }
+}
