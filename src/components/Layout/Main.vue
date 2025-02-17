@@ -3,18 +3,40 @@ import { X } from 'lucide-vue-next';
 import { ref, onMounted, watch } from 'vue';
 import Sidebar from './Sidebar.vue';
 import DashboardItemDialog from '../Common/DashboardItemDialog.vue';
+import type { Item } from '../../types/common';
+import WarningModal from '../Common/WarningModal.vue';
 
-interface Item {
-    index: number;
-    isActive: boolean;
-    count: number;
-    color: string
-    isBeingDragged: boolean
-}
-
+// colors
 const colors = ref(['#7FAA65', '#AA9765', '#656CAA']);
 
+// data list
 const itemsList = ref<Array<Item>>([]);
+
+// target dropped item
+const targetItem = ref<Item>({
+  color: '',
+  count: 0,
+  isActive: false,
+  index: 0,
+  isBeingDragged: false
+});
+
+// warning modal messages
+const warningModalMessages = ref({
+  delete: {
+    title: 'Вы уверены?',
+    subtitle: 'Вы согласны удалить это?',
+    action: confirmToDeleteItem
+  },
+  stick: {
+    title: 'Вы уверены?',
+    subtitle: 'Вы согласны запостить это?',
+    action: changePositionOfItem
+  }
+})
+
+//warning modal status
+const activeWarningStatus = ref<'delete' | 'stick'>('delete');
 
 const loadItemsFromStorage = () => {
     const savedItems = localStorage.getItem('itemsList');
@@ -32,14 +54,6 @@ const loadItemsFromStorage = () => {
     }
 };
 
-watch(() => itemsList.value, (newList) => {
-    localStorage.setItem('itemsList', JSON.stringify(newList));
-}, { deep: true });
-
-onMounted(() => {
-  loadItemsFromStorage()
-});
-
 const dialogVisible = ref(false);
 
 const selectedItem = ref<Item>({
@@ -50,18 +64,22 @@ const selectedItem = ref<Item>({
     isBeingDragged: false
 });
 
-const handleClick = (item: Item) => {
+const warningDeleteModal = ref(false)
+
+const selectItem = (item: Item) => {
     selectedItem.value = { ...item };
     dialogVisible.value = true;
 };
 
-const handleConfirm = (updatedItem: Item) => {
+const confirmToCreateNewItem = (updatedItem: Item) => {
     itemsList.value[updatedItem.index - 1] = updatedItem;
 };
 
-const handleDelete = (index: number) => {
-    const idx = itemsList.value.findIndex(item => item.index === index);
+function confirmToDeleteItem() {
+    const idx = itemsList.value.findIndex(item => item.index === selectedItem.value.index);
     itemsList.value[idx] = { ...itemsList.value[idx], isActive: false, count: 0 };
+
+    warningDeleteModal.value = false
 };
 
 const handleDragStart = (item: Item) => {
@@ -70,21 +88,44 @@ const handleDragStart = (item: Item) => {
   selectedItem.value = { ...item };
 }
 
+function changePositionOfItem() {
+  itemsList.value[targetItem.value.index - 1] = {
+      color: selectedItem.value.color,
+      count: selectedItem.value.count,
+      isActive: true,
+      index: targetItem.value.index,
+      isBeingDragged: false
+  };
+
+  selectedItem.value = { ...selectedItem.value, isActive: false, count: 0 };
+
+  itemsList.value[selectedItem.value.index - 1] = { ...itemsList.value[selectedItem.value.index - 1], isActive: false, count: 0 }
+
+  if(activeWarningStatus.value === 'stick') {
+    warningDeleteModal.value = false
+  }
+}
+
 const handleDrop = (item: Item) => {
+    targetItem.value = item
+    activeWarningStatus.value = 'delete';
     if (item) {
-        itemsList.value[item.index - 1] = {
-            color: selectedItem.value.color,
-            count: selectedItem.value.count,
-            isActive: true,
-            index: item.index,
-            isBeingDragged: false
-        };
-
-        selectedItem.value = { ...selectedItem.value, isActive: false, count: 0 };
-
-        itemsList.value[selectedItem.value.index - 1] = { ...itemsList.value[selectedItem.value.index - 1], isActive: false, count: 0 }
+        if(item.isActive) {
+            activeWarningStatus.value = 'stick'
+            warningDeleteModal.value = true
+        } else {
+          changePositionOfItem()
+        }
     }
 };
+
+watch(() => itemsList.value, (newList) => {
+    localStorage.setItem('itemsList', JSON.stringify(newList));
+}, { deep: true });
+
+onMounted(() => {
+  loadItemsFromStorage()
+});
 </script>
 
 <template>
@@ -96,7 +137,7 @@ const handleDrop = (item: Item) => {
         <button
           class="dashboard__main-item"
           v-for="item in itemsList"
-          @click="handleClick(item)"
+          @click="selectItem(item)"
           draggable="true"
           @dragover.prevent
           @drop="handleDrop(item)"
@@ -119,8 +160,8 @@ const handleDrop = (item: Item) => {
           v-model:visible="dialogVisible"
           v-model:item="selectedItem"
           :colors="colors"
-          @confirm="handleConfirm"
-          @delete="handleDelete"
+          @confirm="confirmToCreateNewItem"
+          @delete="warningDeleteModal = true"
         />
       </div>
     </div>
@@ -129,12 +170,20 @@ const handleDrop = (item: Item) => {
       <div class="dashboard__chat-item shimmer"></div>
       <X class="dashboard__chat-icon" />
     </div>
+
+    <WarningModal
+        v-model="warningDeleteModal" 
+        :title="warningModalMessages[activeWarningStatus].title" 
+        :subtitle="warningModalMessages[activeWarningStatus].subtitle" 
+        @confirm="warningModalMessages[activeWarningStatus].action()" 
+        @cancel="warningDeleteModal = false"
+      />
   </main>
 </template>
 
 <style scoped lang="scss">
 .main_content {
-  margin-top: 12px;
+  margin:12px 0;
   position: relative;
 }
 

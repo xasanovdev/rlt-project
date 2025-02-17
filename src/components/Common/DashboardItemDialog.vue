@@ -54,7 +54,7 @@ const handleColorChange = (color: string) => {
         <div class="dialog__content">
             <div class="dialog__content-image" :style="{ backgroundColor: localItem.color }"></div>
 
-            <form class="dialog__content-colors" @submit.prevent>
+            <form v-if="!localItem.isActive" class="dialog__content-colors" @submit.prevent>
                 <label v-for="color in colors" :key="color" class="radio-label">
                 <input
                     type="radio"
