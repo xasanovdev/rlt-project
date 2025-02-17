@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { X } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Sidebar from './Sidebar.vue';
 import DashboardItemDialog from '../Common/DashboardItemDialog.vue';
 
@@ -16,13 +16,29 @@ const colors = ref(['#7FAA65', '#AA9765', '#656CAA']);
 
 const itemsList = ref<Array<Item>>([]);
 
-itemsList.value = Array.from({ length: 25 }, (_, index) => ({
-    index: index + 1,
-    isActive: false,
-    count: 0,
-    color: colors.value[index % colors.value.length],
-    isBeingDragged: false
-}));
+const loadItemsFromStorage = () => {
+    const savedItems = localStorage.getItem('itemsList');
+
+    if (savedItems) {
+        itemsList.value = JSON.parse(savedItems);
+    } else {
+        itemsList.value = Array.from({ length: 25 }, (_, index) => ({
+            index: index + 1,
+            isActive: false,
+            count: 0,
+            color: colors.value[index % colors.value.length],
+            isBeingDragged: false
+        }));
+    }
+};
+
+watch(() => itemsList.value, (newList) => {
+    localStorage.setItem('itemsList', JSON.stringify(newList));
+}, { deep: true });
+
+onMounted(() => {
+  loadItemsFromStorage()
+});
 
 const dialogVisible = ref(false);
 
