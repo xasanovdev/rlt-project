@@ -65,6 +65,8 @@ const handleDelete = (index: number) => {
 };
 
 const handleDragStart = (item: Item) => {
+  dialogVisible.value = false;
+
   selectedItem.value = { ...item };
 }
 

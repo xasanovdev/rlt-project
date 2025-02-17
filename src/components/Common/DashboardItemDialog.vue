@@ -4,6 +4,7 @@ import { X } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
 import CustomButton from '../Base/Button.vue';
 import Dialog from '../Base/Dialog.vue';
+import Input from '../Base/Input.vue';
 
 interface Props {
   visible: boolean;
@@ -89,12 +90,12 @@ const handleColorChange = (color: string) => {
         </div>
 
         <div v-if="!localItem.isActive" class="dialog__widget">
-            <input
+            <Input
                 v-model="localItem.count"
                 class="dialog__widget-input"
                 type="number"
-                max="100"
-                min="1"
+                :max="100"
+                :min="1"
                 placeholder="Введите количество"
                 />
 
@@ -124,6 +125,7 @@ const handleColorChange = (color: string) => {
     align-items: center;
     gap: 20px;
     border-top: 1px solid var(--secondary-color);
+    backdrop-filter: blur(1rem);
 
     &-buttons {
       display: flex;

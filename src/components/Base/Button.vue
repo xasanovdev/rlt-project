@@ -27,15 +27,15 @@ defineComponent({
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  color: white;
   cursor: pointer;
   transition: background-color 0.3s;
-
+  
   &.primary {
-    background-color: var(--primary-color);
+    background-color: white;
+    color: black;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: var(--primary-color);
     }
   }
 
@@ -49,6 +49,7 @@ defineComponent({
 
   &.danger {
     background-color: var(--red-color);
+    color: white;
 
     &:hover {
       background-color: #bf4551;
