@@ -7,7 +7,7 @@
         <div class="sidebar__info">
             <div class="shimmer sidebar__info--title"></div>
             <div class="sidebar__info--subtitle">
-                <div v-for="i in 4" class="shimmer"></div>
+                <div v-for="_ in 4" class="shimmer"></div>
             </div>
             <div class="shimmer sidebar__info--footer"></div>
         </div>

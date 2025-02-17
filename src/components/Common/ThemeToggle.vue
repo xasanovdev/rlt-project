@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { Moon, Sun } from 'lucide-vue-next';
-import { ref, onMounted, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const theme = ref(localStorage.getItem('theme') || 'light');
 
