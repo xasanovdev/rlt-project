@@ -8,7 +8,8 @@ interface Item {
     index: number;
     isActive: boolean;
     count: number;
-    color: string;
+    color: string
+    isBeingDragged: boolean
 }
 
 const colors = ref(['#7FAA65', '#AA9765', '#656CAA']);
@@ -19,7 +20,8 @@ itemsList.value = Array.from({ length: 25 }, (_, index) => ({
     index: index + 1,
     isActive: false,
     count: 0,
-    color: colors.value[index % colors.value.length]
+    color: colors.value[index % colors.value.length],
+    isBeingDragged: false
 }));
 
 const dialogVisible = ref(false);
@@ -28,7 +30,8 @@ const selectedItem = ref<Item>({
     index: 0,
     isActive: false,
     count: 0,
-    color: colors.value[0]
+    color: colors.value[0],
+    isBeingDragged: false
 });
 
 const handleClick = (item: Item) => {
@@ -55,7 +58,8 @@ const handleDrop = (item: Item) => {
             color: selectedItem.value.color,
             count: selectedItem.value.count,
             isActive: true,
-            index: item.index
+            index: item.index,
+            isBeingDragged: false
         };
 
         selectedItem.value = { ...selectedItem.value, isActive: false, count: 0 };
@@ -79,14 +83,17 @@ const handleDrop = (item: Item) => {
           @dragover.prevent
           @drop="handleDrop(item)"
           @dragstart="handleDragStart(item)"
+          @dragenter="item.isBeingDragged = true"
+          @dragleave="item.isBeingDragged = false"
           :key="item.index"
           :aria-label="`Перетащите предмет ${item.index}`"
           :data-item-index="item.index"
           type="button"
+          :class="{ 'dashboard__main-item--dragging': item.isBeingDragged }"
         >
           <div v-if="item.isActive" class="dashboard__main-item-active">
-          <div class="dashboard__main-item--image" :style="{ backgroundColor: item.color }"></div>
-          <span class="dashboard__main-item--count">{{ item.count }}</span>
+            <div class="dashboard__main-item--image" :style="{ backgroundColor: item.color }"></div>
+            <span class="dashboard__main-item--count">{{ item.count }}</span>
           </div>
         </button>
 
@@ -135,7 +142,11 @@ const handleDrop = (item: Item) => {
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: center;  
+
+      &--dragging {
+        border: 4px solid var(--secondary-color);
+      }
 
       &--active {
         width: 100%;

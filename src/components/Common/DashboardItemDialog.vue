@@ -22,7 +22,6 @@ const emit = defineEmits(['update:visible', 'update:item', 'confirm', 'delete'])
 
 const localItem = ref({ ...props.item });
 
-// Whenever the prop changes, update our local copy
 watchEffect(() => {
   if (props.visible) {
     localItem.value = { ...props.item };
