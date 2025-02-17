@@ -243,7 +243,6 @@ const handleColorChange = (color: string) => {
         position: absolute;
         top: -14px;
         left: 14px;
-        z-index: 1;
         width: 100%;
         height: 100%;
         backdrop-filter: blur(1rem);

@@ -44,6 +44,25 @@ const handleDelete = (index: number) => {
     const idx = itemsList.value.findIndex(item => item.index === index);
     itemsList.value[idx] = { ...itemsList.value[idx], isActive: false, count: 0 };
 };
+
+const handleDragStart = (item: Item) => {
+  selectedItem.value = { ...item };
+}
+
+const handleDrop = (item: Item) => {
+    if (item) {
+        itemsList.value[item.index - 1] = {
+            color: selectedItem.value.color,
+            count: selectedItem.value.count,
+            isActive: true,
+            index: item.index
+        };
+
+        selectedItem.value = { ...selectedItem.value, isActive: false, count: 0 };
+
+        itemsList.value[selectedItem.value.index - 1] = { ...itemsList.value[selectedItem.value.index - 1], isActive: false, count: 0 }
+    }
+};
 </script>
 
 <template>
@@ -54,14 +73,20 @@ const handleDelete = (index: number) => {
       <div class="dashboard__main wrapper">
         <button
           class="dashboard__main-item"
-          v-for="(item, index) in itemsList"
+          v-for="item in itemsList"
           @click="handleClick(item)"
-          :key="index"
+          draggable="true"
+          @dragover.prevent
+          @drop="handleDrop(item)"
+          @dragstart="handleDragStart(item)"
+          :key="item.index"
+          :aria-label="`Перетащите предмет ${item.index}`"
+          :data-item-index="item.index"
           type="button"
         >
           <div v-if="item.isActive" class="dashboard__main-item-active">
           <div class="dashboard__main-item--image" :style="{ backgroundColor: item.color }"></div>
-          <span class="dashboard__main-item--count">{{ item.index }}</span>
+          <span class="dashboard__main-item--count">{{ item.count }}</span>
           </div>
         </button>
 
