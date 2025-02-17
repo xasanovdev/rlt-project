@@ -1,11 +1,13 @@
 @import url('./_normalize.scss');
 @import url('./_variables.scss');
 @import url('./_animation.scss');
+@import url('./_fonts.scss');
 
 body {
   background-color: var(--background-color);
   color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
+  font-family: 'SF Pro Display', sans-serif;
 }
 
 a {

@@ -2,30 +2,54 @@
 import CustomButton from '../Base/Button.vue';
 import { X } from 'lucide-vue-next';
 import { ref } from 'vue';
+import Sidebar from './Sidebar.vue';
 
-const itemsList = ref<Array<{ index: number; isActive: boolean; count: number }>>([]);
+interface Item {
+    index: number;
+    isActive: boolean;
+    count: number;
+    color: string;
+}
+
+const colors = ref(['#7FAA65', '#AA9765', '#656CAA']);
+
+const itemsList = ref<Array<Item>>([]);
 
 itemsList.value = Array.from({ length: 25 }, (_, index) => ({
     index: index + 1,
     isActive: false,
     count: 0,
-    color: ''
+    color: colors.value[index % colors.value.length]
 }));
 
-const colors = ref(['#7FAA65', '#AA9765', '#656CAA']);
 
 const dialogVisible = ref(false);
 
-const selectedItem = ref<{ index: number; isActive: boolean; count: number; color: string }>({
+const selectedItem = ref<Item>({
     index: 0,
     isActive: false,
     count: 0,
-    color: ''
+    color: colors.value[0]
 });
 
-const handleClick = (item: { index: number; isActive: boolean; count: number; color: string }) => {
+const handleClick = (item: Item) => {
     dialogVisible.value = true;
-    selectedItem.value = item;
+
+    selectedItem.value = { ...item };
+};
+
+const handleConfirm = () => {
+    dialogVisible.value = false;
+
+    itemsList.value[selectedItem.value.index - 1] = { ...selectedItem.value, isActive: true };
+};
+
+const deleteSelectedActiveItem = () => {
+    const index = itemsList.value.findIndex(item => item.index === selectedItem.value.index);
+
+    itemsList.value[index] = { ...itemsList.value[index], isActive: false, count: 0 };
+
+    dialogVisible.value = false;
 };
 
 </script>
@@ -33,19 +57,7 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
 <template>
   <main class="main_content">
     <div class="dashboard">
-        <div class="dashboard__sidebar wrapper">    
-            <div class="dashboard__sidebar-image">
-                <img src="/sidebar-image.png" alt="sidebar-image">
-            </div>
-
-            <div class="dashboard__sidebar-info">
-                <div class="shimmer dashboard__sidebar-info--title"></div>
-                <div class="dashboard__sidebar-info--subtitle">
-                    <div v-for="i in 4" class="shimmer"></div>
-                </div>
-                <div class="shimmer dashboard__sidebar-info--footer"></div>
-            </div>
-        </div>
+        <Sidebar />
 
         <div class="dashboard__main wrapper">
             <button class="dashboard__main-item" v-for="(item, index) in itemsList" 
@@ -59,9 +71,22 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
                 <div class="dialog" v-if="dialogVisible">
                     <div class="dialog__content">
                         <div class="dialog__content-image"
-                            :style="{ backgroundColor: selectedItem?.color }"
+                            :style="{ backgroundColor: selectedItem.color }"
                         >
                         </div>
+
+                        <form class="dialog__content-colors" @submit.prevent>
+                          <label v-for="color in colors" :key="color" class="radio-label">
+                            <input
+                              type="radio"
+                              v-model="selectedItem.color"
+                              :value="color"
+                              class="input-radio"
+                            />
+
+                            <button class="radio-color" :class="{ 'active': selectedItem.color === color }" :style="{ backgroundColor: color }"></button>
+                          </label>
+                        </form>
 
                         <hr class="dialog__content-line">
 
@@ -73,11 +98,27 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
                             <div class="dialog__content-info--footer shimmer"></div>
                         </div>
 
-                        <hr class="dialog__content-line">
-                        
-                        <CustomButton class="delete__button" @click="dialogVisible = false" type="danger">
-                            Удалить предмет
-                        </CustomButton>
+                        <template v-if="selectedItem.isActive">
+                            <hr class="dialog__content-line">
+
+                            <CustomButton class="delete__button" @click="deleteSelectedActiveItem" type="danger" size="medium">
+                                Удалить предмет
+                            </CustomButton>
+                        </template>
+                    </div>
+
+                    <div v-if="!selectedItem.isActive" class="dialog__widget">
+                        <input v-model="selectedItem.count" class="dialog__widget-input" type="number" max="100" min="1" placeholder="Введите количество"/>
+
+                        <div class="dialog__widget-buttons">
+                            <CustomButton @click="dialogVisible = false" type="primary" size="medium">
+                                Отмена
+                            </CustomButton>
+
+                            <CustomButton @click="handleConfirm" type="danger" size="medium">
+                                Подтвердить
+                            </CustomButton>
+                        </div>
                     </div>
 
 
@@ -111,6 +152,26 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
         flex-direction: column;
         border-left: 1px solid var(--secondary-color);
 
+        &__widget {
+            padding: 20px;
+            background: var(--dark-gray);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            border-top: 1px solid var(--secondary-color);
+
+            &-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            &-input {
+                width: 100%;
+            }
+        }
+
         &__content {
             display: flex;
             flex-direction: column;
@@ -119,6 +180,42 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
             width: 100%;
             height: 100%;
             padding-top: 55px;
+            overflow-y: auto;
+
+            &-colors {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                width: 100%;
+                margin-top: 2rem;
+
+                .radio-label {
+                  width:100%;
+                  position: relative;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+
+                .input-radio {
+                  width: 100%;
+                  height: 100%;
+                  position: absolute;
+                  cursor: pointer;
+                  opacity: 0;
+                }
+
+                .radio-color {
+                  width: 20px;
+                  height: 20px;
+                  border-radius: 50%;
+
+                  &.active {
+                    outline: 4px solid var(--secondary-color) !important;
+                  }
+                }
+            }
 
             .delete__button {
                 width: 100%;
@@ -128,7 +225,7 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
                 width: 100%;
                 height: 1px;
                 background-color: var(--secondary-color);
-                margin-top: 2rem;
+                margin-top: 1rem;
                 margin-bottom: 1rem;
             }
 
@@ -175,6 +272,7 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
                 position: relative;
                 background-color: var(--secondary-color);
                 z-index: 2;
+                flex-shrink: 0;
 
                 &::before {
                     content: '';
@@ -192,71 +290,18 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
 }
 
 .dashboard {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: 1rem;
-
-  &__sidebar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-
-    &-image {
-      width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-      }
-    }
-
-    &-info {
-        margin-top: 20px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-
-      &--title {
-        max-width: 190px;
-        width: 100%;
-        height: 26px;
-        border-radius: 8px;
-      }
-
-      &--subtitle {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-
-        .shimmer {
-            width: 88%;
-            height: 10px;
-            border-radius: 8px;
-        }
-      }
-
-      &--footer {
-        width: 80px;
-        height: 10px;
-        border-radius: 8px;
-      }
-    }
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
 
   &__main {
-    border-radius: 12px;
     display: grid;
     padding: 0px !important;
+    width: 100% !important;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
     overflow: hidden;
+    max-width: 525px;
     position: relative;
 
     &-item {
@@ -281,7 +326,6 @@ const handleClick = (item: { index: number; isActive: boolean; count: number; co
 
   &__chat {
     width: 100%;
-    grid-column: span 2;
     position: relative;
 
     &-item {
