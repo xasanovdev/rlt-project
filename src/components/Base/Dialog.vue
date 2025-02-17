@@ -1,19 +1,17 @@
 <template>
-      <Transition name="from-right">
+    <Transition name="from-right">
         <div class="dialog" v-if="visible">
             <slot />
         </div>
-      </Transition>
+    </Transition>
 </template>
 
 <script lang="ts" setup>
-
 interface Props {
-    visible: boolean
+    visible: boolean;
 }
 
 defineProps<Props>();
-
 </script>
 
 <style scoped lang="scss">

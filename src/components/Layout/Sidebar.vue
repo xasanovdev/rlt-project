@@ -1,7 +1,9 @@
 <template>
-    <aside class="sidebar wrapper">    
+    <aside class="sidebar wrapper">
         <div class="sidebar__image">
-            <img src="/sidebar-image.png" alt="sidebar-image">
+            <img src="/sidebar-image.png" alt="sidebar-image" />
+
+            <div class="blur"></div>
         </div>
 
         <div class="sidebar__info">
@@ -19,7 +21,7 @@
 </template>
 
 <style scoped lang="scss">
-  .sidebar {
+.sidebar {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,18 +30,27 @@
     max-width: 236px;
 
     @media (max-width: 820px) {
-      max-width: 100%;
-      flex-direction: row;
+        max-width: 100%;
+        flex-direction: row;
     }
 
     &__image {
-      width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-
-      img {
         width: 100%;
-      }
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+
+        .blur {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4px);
+        }
+
+        img {
+            width: 100%;
+        }
     }
 
     &__info {
@@ -50,47 +61,47 @@
         align-items: center;
         gap: 20px;
 
-      &--title {
-        max-width: 190px;
-        width: 100%;
-        height: 26px;
-        border-radius: 8px;
-      }
-
-      &--subtitle {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-
-        .shimmer:nth-child(2) {
-            width: 90%;
+        &--title {
+            max-width: 190px;
+            width: 100%;
+            height: 26px;
+            border-radius: 8px;
         }
 
-        .shimmer:nth-child(3) {
-            width:70%;
-        }
-        .shimmer:nth-child(4) {
-            width: 65%;
-        }
-        .shimmer:nth-child(5) {
-            width: 64%;
+        &--subtitle {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+
+            .shimmer:nth-child(2) {
+                width: 90%;
+            }
+
+            .shimmer:nth-child(3) {
+                width: 70%;
+            }
+            .shimmer:nth-child(4) {
+                width: 65%;
+            }
+            .shimmer:nth-child(5) {
+                width: 64%;
+            }
+
+            .shimmer {
+                width: 70%;
+                height: 10px;
+                border-radius: 8px;
+            }
         }
 
-        .shimmer {
-            width: 70%;
+        &--footer {
+            width: 80px;
             height: 10px;
             border-radius: 8px;
         }
-      }
-
-      &--footer {
-        width: 80px;
-        height: 10px;
-        border-radius: 8px;
-      }
     }
-  }
+}
 </style>

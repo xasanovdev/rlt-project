@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import Header from './components/Layout/Header.vue';
-import Main from './components/Layout/Main.vue';
-
-
+import Header from "./components/Layout/Header.vue";
+import Main from "./components/Layout/Main.vue";
 </script>
 
 <template>
-  <div class="container app_content">
-    <Header />
+    <div class="container app_content">
+        <Header />
 
-    <Main />
-
-  </div>
+        <Main />
+    </div>
 </template>
 
 <style scoped lang="scss">
 .app_content {
-  margin-top: 12px;
+    margin-top: 12px;
 }
 </style>

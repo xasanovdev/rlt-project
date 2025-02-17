@@ -1,26 +1,28 @@
-@import url('./_normalize.scss');
-@import url('./_variables.scss');
-@import url('./_animation.scss');
-@import url('./_fonts.scss');
+@import url("./_normalize.scss");
+@import url("./_variables.scss");
+@import url("./_animation.scss");
+@import url("./_fonts.scss");
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
-  font-family: 'SF Pro Display', sans-serif;
-  overflow-y: auto;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+    font-family: "SF Pro Display", sans-serif;
+    overflow-y: auto;
 }
 
 a {
-  color: var(--primary-color);
-  &:hover {
-    color: var(--primary-color)
-  }
+    color: var(--primary-color);
+    &:hover {
+        color: var(--primary-color);
+    }
 }
 
 .wrapper {
-  background-color: var(--dark-gray);
-  border: 1px solid var(--secondary-color);
-  border-radius: 12px;
-  padding: 1rem;
+    background-color: var(--dark-gray);
+    border: 1px solid var(--secondary-color);
+    border-radius: 12px;
+    padding: 1rem;
 }
