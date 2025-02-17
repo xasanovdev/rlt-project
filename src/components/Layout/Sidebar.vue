@@ -7,7 +7,11 @@
         <div class="sidebar__info">
             <div class="shimmer sidebar__info--title"></div>
             <div class="sidebar__info--subtitle">
-                <div v-for="_ in 4" class="shimmer"></div>
+                <div class="shimmer"></div>
+                <div class="shimmer"></div>
+                <div class="shimmer"></div>
+                <div class="shimmer"></div>
+                <div class="shimmer"></div>
             </div>
             <div class="shimmer sidebar__info--footer"></div>
         </div>
@@ -61,8 +65,22 @@
         gap: 1rem;
         width: 100%;
 
+        .shimmer:nth-child(2) {
+            width: 90%;
+        }
+
+        .shimmer:nth-child(3) {
+            width:70%;
+        }
+        .shimmer:nth-child(4) {
+            width: 65%;
+        }
+        .shimmer:nth-child(5) {
+            width: 64%;
+        }
+
         .shimmer {
-            width: 88%;
+            width: 70%;
             height: 10px;
             border-radius: 8px;
         }
