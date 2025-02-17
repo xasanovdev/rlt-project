@@ -123,11 +123,11 @@ const handleDrop = (item: Item) => {
           @delete="handleDelete"
         />
       </div>
+    </div>
 
-      <div class="dashboard__chat wrapper">
-        <div class="dashboard__chat-item shimmer"></div>
-        <X class="dashboard__chat-icon" />
-      </div>
+    <div class="dashboard__chat wrapper">
+      <div class="dashboard__chat-item shimmer"></div>
+      <X class="dashboard__chat-icon" />
     </div>
   </main>
 </template>
@@ -140,8 +140,11 @@ const handleDrop = (item: Item) => {
 
 .dashboard {
   display: flex;
-  flex-wrap: wrap;
   gap: 24px;
+
+  @media (max-width: 820px) {
+    flex-direction: column;
+  }
 
   &__main {
     display: grid;
@@ -152,6 +155,14 @@ const handleDrop = (item: Item) => {
     overflow: hidden;
     max-width: 525px;
     position: relative;
+
+    @media (max-width: 820px) {
+      max-width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
 
     &-item {
       position: relative;
@@ -219,6 +230,7 @@ const handleDrop = (item: Item) => {
   &__chat {
     width: 100%;
     position: relative;
+    margin-top: 24px;
 
     &-item {
       width: 100%;

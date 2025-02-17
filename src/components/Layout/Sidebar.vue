@@ -20,7 +20,13 @@
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    gap: 20px;
     max-width: 236px;
+
+    @media (max-width: 820px) {
+      max-width: 100%;
+      flex-direction: row;
+    }
 
     &__image {
       width: 100%;
